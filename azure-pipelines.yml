@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'CentOS-7.3'
+  vmImage: 'CentOS-7.03'
 
 variables:
   buildConfiguration: 'Release'
