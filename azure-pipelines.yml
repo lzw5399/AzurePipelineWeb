@@ -1,22 +1,84 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
 pool:
-  name: Hosted Ubuntu 1604
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  imageName: '$(dockerid)/azureplpelineweb'
 
 steps:
-- task: DotNetCoreCLI@2
-  displayName: 'Generate coverage report'
-  inputs:
-    command: test
-    projects: 'AzurePipeline.Test/AzurePipeline.Test.csproj'
-    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
-    publishTestResults: false
+
+- script: dotnet build -c Release
+  displayName: 'Dotnet build'
+
+- script: docker build -f AzurePipelineWeb/Dockerfile -t $(imageName) .
+  displayName: 'Docker build'
 
 - script: |
-   dotnet tool install dotnet-sonarscanner --tool-path sonar
-   
-   sonar/dotnet-sonarscanner begin /k:"AzurePipelineWeb" /d:sonar.host.url="http://sonarqube.codepie.fun" /d:sonar.login="ec4e3a300be713cc5260c68cb2de08d6de4e1567" /d:sonar.cs.opencover.reportsPaths=AzurePipeline.Test/coverage.opencover.xml
-   
-   dotnet build
-   
-   sonar/dotnet-sonarscanner end /d:sonar.login="ec4e3a300be713cc5260c68cb2de08d6de4e1567"
-   
-  displayName: 'Run scanner'
+    docker login -u $(dockerid) -p $(password)
+    docker push $(imageName)
+  displayName: 'Push docker image'
+
+- task: SSH@0
+  displayName: 'Run shell inline on remote machine'
+  inputs:
+    sshEndpoint: 'aliyun_centos'
+    runOptions: inline
+
+    inline: |
+      containers=$(docker ps -q --filter name=azureplpelineweb)
+      if test -n "$containers"; 
+      then
+      docker stop $(docker ps -q --filter name=azureplpelineweb) >> /dev/null 2>&1
+      rc=$?
+      if [[ $rc != 0 ]];
+      then
+       echo 'failed to stop container...'
+       exit $rc;
+      fi
+      fi
+     
+      containers1=$(docker ps -q -a --filter name=azureplpelineweb)
+      if test -n "$containers1"; 
+      then
+      docker rm $(docker ps -q -a --filter name=azureplpelineweb) >> /dev/null 2>&1
+      rc=$?
+      if [[ $rc != 0 ]];
+      then
+       echo 'failed to remove container...'
+       exit $rc;
+      fi
+      fi
+     
+     
+      docker pull $(imageName):latest >> /dev/null 2>&1
+      rc=$?
+      if [[ $rc != 0 ]];
+      then
+       echo 'failed to pull container...'
+       exit $rc;
+      fi
+     
+      # docker run --name my_sample -it -p 80:80 lzw5399/mysample
+      docker run -d -p 80:80 --name azureplpelineweb $(imageName):latest >> /dev/null 2>&1
+      rc=$?
+      if [[ $rc != 0 ]];
+      then
+       echo 'failed to run container...'
+       exit $rc;
+      fi
+     
+      danglings=$(docker images -f "dangling=true" -q)
+      if test -n "$danglings";
+      then
+      docker rmi $(docker images -f "dangling=true" -q) >> /dev/null 2>&1
+      rc=$?
+      if [[ $rc != 0 ]];
+      then
+       echo 'failed to remove danglings container...'
+       exit $rc;
+      fi
+      fi
