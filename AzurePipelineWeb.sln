@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzurePipelineWeb", "AzurePipelineWeb\AzurePipelineWeb.csproj", "{E3694E21-AA31-4BA4-8D0E-415DA21C8A3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzurePipelineWeb", "AzurePipelineWeb\AzurePipelineWeb.csproj", "{E3694E21-AA31-4BA4-8D0E-415DA21C8A3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzurePipeline.Test", "AzurePipeline.Test\AzurePipeline.Test.csproj", "{E0B836BB-8EFD-47E4-97EE-9F18F9C4CFBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E3694E21-AA31-4BA4-8D0E-415DA21C8A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3694E21-AA31-4BA4-8D0E-415DA21C8A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3694E21-AA31-4BA4-8D0E-415DA21C8A3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0B836BB-8EFD-47E4-97EE-9F18F9C4CFBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0B836BB-8EFD-47E4-97EE-9F18F9C4CFBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0B836BB-8EFD-47E4-97EE-9F18F9C4CFBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0B836BB-8EFD-47E4-97EE-9F18F9C4CFBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
