@@ -54,7 +54,7 @@ steps:
       fi
      
      
-      docker pull azureplpelineweb:latest >> /dev/null 2>&1
+      docker pull $(imageName):latest >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
