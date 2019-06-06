@@ -14,7 +14,7 @@ steps:
 - script: dotnet build -c Release
   displayName: 'Dotnet build'
 
-- script: docker build -t $(imageName) .
+- script: docker build -f AzurePipelineWeb/Dockerfile -t $(imageName) .
   displayName: 'Docker build'
 
 - script: |
