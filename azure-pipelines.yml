@@ -62,7 +62,8 @@ steps:
        exit $rc;
       fi
      
-      docker run -d -p 80:80 --name azureplpelineweb  >> /dev/null 2>&1
+      # docker run --name my_sample -it -p 80:80 lzw5399/mysample
+      docker run -d -p 80:80 --name azureplpelineweb $(imageName):latest >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
