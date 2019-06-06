@@ -8,15 +8,15 @@ pool:
 
 variables:
   tagName: '$(Build.BuildNumber)'
-  imageName: 'azurePlpelineWeb'
+  imageName: '$(dockerId)/azureplpelineweb'
 
 steps:
 
 - script: dotnet build -c Release
-  displayName: 'dotnet build'
+  displayName: 'Dotnet build'
 
 - script: docker build -f Dockerfile -t $(imageName) .
-  displayName: 'Docker build Script'
+  displayName: 'Docker build'
 
 - script: |
     docker login -u $(dockerId) -p $(pswd)
@@ -30,10 +30,10 @@ steps:
     runOptions: inline
 
     inline: |
-      containers=$(docker ps -q --filter name=$(imageName))
+      containers=$(docker ps -q --filter name=azureplpelineweb)
       if test -n "$containers"; 
       then
-      docker stop $(docker ps -q --filter name=$(imageName)) >> /dev/null 2>&1
+      docker stop $(docker ps -q --filter name=azureplpelineweb) >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
@@ -42,10 +42,10 @@ steps:
       fi
       fi
      
-      containers1=$(docker ps -q -a --filter name=$(imageName))
+      containers1=$(docker ps -q -a --filter name=azureplpelineweb)
       if test -n "$containers1"; 
       then
-      docker rm $(docker ps -q -a --filter name=$(imageName)) >> /dev/null 2>&1
+      docker rm $(docker ps -q -a --filter name=azureplpelineweb) >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
@@ -55,7 +55,7 @@ steps:
       fi
      
      
-      docker pull $(imageName):latest >> /dev/null 2>&1
+      docker pull azureplpelineweb:latest >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
@@ -63,7 +63,7 @@ steps:
        exit $rc;
       fi
      
-      docker run -d -p 80:80 --name $(imageName)  >> /dev/null 2>&1
+      docker run -d -p 80:80 --name azureplpelineweb  >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
