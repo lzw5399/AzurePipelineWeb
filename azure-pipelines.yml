@@ -57,7 +57,7 @@ steps:
       containers2=$(docker ps -q -a --filter name=azureplpelineweb)
       if test -n "$containers2"; 
       then
-      docker rmi $(docker ps -q -a --filter name=azureplpelineweb) >> /dev/null 2>&1
+      docker rmi $(docker images | grep azureplpelineweb | awk '{print $3}') >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
