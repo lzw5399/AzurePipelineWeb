@@ -18,5 +18,18 @@ namespace AzurePipeline.Test
             // assert
             Assert.Equal("23333", str);
         }
+
+        [Fact]
+        public void ForTest_should_return_string2()
+        {
+            // arrange
+            var controller = new HomeController();
+
+            // act
+            var str = controller.ForTest();
+
+            // assert
+            Assert.Equal("23333", str);
+        }
     }
 }
