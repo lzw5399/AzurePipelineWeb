@@ -41,7 +41,7 @@ steps:
        exit $rc;
       fi
       fi
-     
+  
       containers1=$(docker ps -q -a --filter name=azureplpelineweb)
       if test -n "$containers1"; 
       then
@@ -50,6 +50,18 @@ steps:
       if [[ $rc != 0 ]];
       then
        echo 'failed to remove container...'
+       exit $rc;
+      fi
+      fi
+
+      containers2=$(docker ps -q -a --filter name=azureplpelineweb)
+      if test -n "$containers2"; 
+      then
+      docker rmi $(docker ps -q -a --filter name=azureplpelineweb) >> /dev/null 2>&1
+      rc=$?
+      if [[ $rc != 0 ]];
+      then
+       echo 'failed to remove image...'
        exit $rc;
       fi
       fi
