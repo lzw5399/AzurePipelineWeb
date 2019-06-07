@@ -55,7 +55,7 @@ steps:
       fi
      
      
-      docker pull $(imageName):latest >> /dev/null 2>&1
+      docker pull $(imageName) >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
@@ -64,7 +64,7 @@ steps:
       fi
      
       # docker run --name my_sample -it -p 8080:80 lzw5399/mysample
-      docker run -d -p 8080:80 --name azureplpelineweb $(imageName):latest >> /dev/null 2>&1
+      docker run -d -p 8080:80 --name azureplpelineweb $(imageName) >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
       then
