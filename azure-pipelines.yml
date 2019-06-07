@@ -30,6 +30,8 @@ steps:
     runOptions: inline
 
     inline: |
+
+      # stop container
       containers=$(docker ps -q --filter name=azureplpelineweb)
       if test -n "$containers"; 
       then
@@ -42,6 +44,7 @@ steps:
       fi
       fi
   
+      # remove container
       containers1=$(docker ps -q -a --filter name=azureplpelineweb)
       if test -n "$containers1"; 
       then
@@ -54,9 +57,7 @@ steps:
       fi
       fi
 
-      containers2=$(docker ps -q -a --filter name=azureplpelineweb)
-      if test -n "$containers2"; 
-      then
+      # remove image
       docker rmi $(docker images | grep azureplpelineweb | awk '{print $3}') >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
@@ -64,9 +65,8 @@ steps:
        echo 'failed to remove image...'
        exit $rc;
       fi
-      fi
      
-     
+      # pull newest image
       docker pull $(imageName) >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
@@ -75,7 +75,7 @@ steps:
        exit $rc;
       fi
      
-      # docker run --name my_sample -it -p 8080:80 lzw5399/mysample
+      # run image
       docker run -d -p 8080:80 --name azureplpelineweb $(imageName) >> /dev/null 2>&1
       rc=$?
       if [[ $rc != 0 ]];
@@ -84,6 +84,7 @@ steps:
        exit $rc;
       fi
      
+      # remove useless images
       danglings=$(docker images -f "dangling=true" -q)
       if test -n "$danglings";
       then
