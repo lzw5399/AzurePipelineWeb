@@ -11,23 +11,22 @@ variables:
   imageName: '$(dockerid)/azureplpelineweb:$(tagName)'
 
 steps:
+  - script: dotnet build -c Release
+    displayName: 'Dotnet build'
 
-- script: dotnet build -c Release
-  displayName: 'Dotnet build'
+  - script: docker build -f AzurePipelineWeb/Dockerfile -t $(imageName) .
+    displayName: 'Docker build'
 
-- script: docker build -f AzurePipelineWeb/Dockerfile -t $(imageName) .
-  displayName: 'Docker build'
+  - script: |
+      docker login -u $(dockerid) -p $(password)
+      docker push $(imageName)
+    displayName: 'Push docker image'
 
-- script: |
-    docker login -u $(dockerid) -p $(password)
-    docker push $(imageName)
-  displayName: 'Push docker image'
+  - task: SSH@0
+    displayName: 'Run shell inline on remote machine'
+    inputs:
+      sshEndpoint: 'aliyun_centos'
+      runOptions: inline
 
-- task: SSH@0
-  displayName: 'Run shell inline on remote machine'
-  inputs:
-    sshEndpoint: 'aliyun_centos'
-    runOptions: inline
-
-    inline: |
-    kubectl set image deployment/azureplpelineweb-deployment azureplpelineweb=$(imageName) --record=true
+      inline: |
+        kubectl set image deployment/azureplpelineweb-deployment azureplpelineweb=$(imageName) --record=true
