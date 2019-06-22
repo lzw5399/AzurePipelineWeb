@@ -27,4 +27,12 @@ steps:
       runOptions: inline
 
       inline: |
+        containers2=$(docker images | grep azureplpelineweb | awk '{print $3}')
+        if test -n "$containers2"; 
+        then
         docker rmi $(docker images | grep azureplpelineweb | awk '{print $3}') >> /dev/null 2>&1
+        rc=$?
+        if [[ $rc != 0 ]];
+        then
+        fi
+        fi
