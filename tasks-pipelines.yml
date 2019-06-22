@@ -21,7 +21,7 @@ steps:
     displayName: 'Run scanner'
 
   - task: SSH@0
-    displayName: 'delete old tag image on remote machine'
+    displayName: 'Run shell on remote machine'
     inputs:
       sshEndpoint: 'aliyun_centos'
       runOptions: inline
