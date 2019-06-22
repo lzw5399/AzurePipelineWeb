@@ -30,10 +30,10 @@ steps:
 
       inline: |
         # stop container
-        containers=$(docker ps -q --filter name=codepieapi)
+        containers=$(docker ps -q --filter name=azureplpelineweb)
         if test -n "$containers"; 
         then
-        docker stop $(docker ps -q --filter name=codepieapi) >> /dev/null 2>&1
+        docker stop $(docker ps -q --filter name=azureplpelineweb) >> /dev/null 2>&1
         rc=$?
         if [[ $rc != 0 ]];
         then
@@ -43,10 +43,10 @@ steps:
         fi
 
         # remove container
-        containers1=$(docker ps -q -a --filter name=codepieapi)
+        containers1=$(docker ps -q -a --filter name=azureplpelineweb)
         if test -n "$containers1"; 
         then
-        docker rm $(docker ps -q -a --filter name=codepieapi) >> /dev/null 2>&1
+        docker rm $(docker ps -q -a --filter name=azureplpelineweb) >> /dev/null 2>&1
         rc=$?
         if [[ $rc != 0 ]];
         then
@@ -56,10 +56,10 @@ steps:
         fi
 
         # remove image
-        containers2=$(docker images | grep codepieapi | awk '{print $3}')
+        containers2=$(docker images | grep azureplpelineweb | awk '{print $3}')
         if test -n "$containers2"; 
         then
-        docker rmi $(docker images | grep codepieapi | awk '{print $3}') >> /dev/null 2>&1
+        docker rmi $(docker images | grep azureplpelineweb | awk '{print $3}') >> /dev/null 2>&1
         rc=$?
         if [[ $rc != 0 ]];
         then
