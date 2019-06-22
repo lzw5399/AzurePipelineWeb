@@ -1,5 +1,14 @@
 pool:
   name: Hosted Ubuntu 1604
+
+schedules:
+  - cron: '0 */2 * * *'
+    displayName: 'Run per two hours'
+    branches:
+      include:
+      - master
+    always: 'true'
+
 steps:
   - task: DotNetCoreCLI@2
     displayName: Test
