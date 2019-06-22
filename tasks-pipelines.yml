@@ -1,0 +1,30 @@
+pool:
+  name: Hosted Ubuntu 1604
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: '**/AzurePipeline.Test.csproj'
+      arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
+      publishTestResults: false
+
+  - script: |
+      dotnet tool install dotnet-sonarscanner --tool-path sonar
+
+      sonar/dotnet-sonarscanner begin /k:"AzurePipelineDemo" /o:"zhiwen-kooboo-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="3c6a54a327d7c294fc63ab47b85fe5feed42e94a" /d:sonar.cs.opencover.reportsPaths=$(System.DefaultWorkingDirectory)/AzurePipeline.Test/coverage.opencover.xml
+
+      dotnet build
+
+      sonar/dotnet-sonarscanner end /d:sonar.login="3c6a54a327d7c294fc63ab47b85fe5feed42e94a"
+
+    displayName: 'Run scanner'
+
+  - task: SSH@0
+    displayName: 'delete old tag image on remote machine'
+    inputs:
+      sshEndpoint: 'aliyun_centos'
+      runOptions: inline
+
+      inline: |
+        docker rmi $(docker images | grep azureplpelineweb | awk '{print $3}') >> /dev/null 2>&1
