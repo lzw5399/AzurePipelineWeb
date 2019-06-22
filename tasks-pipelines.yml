@@ -27,13 +27,26 @@ steps:
       runOptions: inline
 
       inline: |
-        containers2=$(docker images | grep azureplpelineweb | awk '{print $3}')
-        if test -n "$containers2"; 
+        # remove old tag images
+        containers1=$(docker images | grep azureplpelineweb | awk '{print $3}')
+        if test -n "$containers1"; 
         then
         docker rmi $(docker images | grep azureplpelineweb | awk '{print $3}') >> /dev/null 2>&1
         rc=$?
         if [[ $rc != 0 ]];
         then
           echo 'failed to remove image...'
+        fi
+        fi
+
+        # refresh pod
+        pods1=$(kubectl get pod | grep azureplpelineweb | awk '{print $1}')
+        if test -n "$pods1"; 
+        then
+        kubectl delete pod $(kubectl get pod | grep azureplpelineweb | awk '{print $1}') >> /dev/null 2>&1
+        rc=$?
+        if [[ $rc != 0 ]];
+        then
+          echo 'failed to refresh pod...'
         fi
         fi
