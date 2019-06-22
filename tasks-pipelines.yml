@@ -34,5 +34,6 @@ steps:
         rc=$?
         if [[ $rc != 0 ]];
         then
+          echo 'failed to remove image...'
         fi
         fi
