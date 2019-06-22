@@ -29,4 +29,44 @@ steps:
       runOptions: inline
 
       inline: |
+        # stop container
+        containers=$(docker ps -q --filter name=codepieapi)
+        if test -n "$containers"; 
+        then
+        docker stop $(docker ps -q --filter name=codepieapi) >> /dev/null 2>&1
+        rc=$?
+        if [[ $rc != 0 ]];
+        then
+        echo 'failed to stop container...'
+        exit $rc;
+        fi
+        fi
+
+        # remove container
+        containers1=$(docker ps -q -a --filter name=codepieapi)
+        if test -n "$containers1"; 
+        then
+        docker rm $(docker ps -q -a --filter name=codepieapi) >> /dev/null 2>&1
+        rc=$?
+        if [[ $rc != 0 ]];
+        then
+        echo 'failed to remove container...'
+        exit $rc;
+        fi
+        fi
+
+        # remove image
+        containers2=$(docker images | grep codepieapi | awk '{print $3}')
+        if test -n "$containers2"; 
+        then
+        docker rmi $(docker images | grep codepieapi | awk '{print $3}') >> /dev/null 2>&1
+        rc=$?
+        if [[ $rc != 0 ]];
+        then
+        echo 'failed to remove image...'
+        exit $rc;
+        fi
+        fi
+
+        # update deployment image
         kubectl set image deployment/azureplpelineweb azureplpelineweb=$(imageName) --record=true
