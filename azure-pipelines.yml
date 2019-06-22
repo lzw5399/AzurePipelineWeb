@@ -29,4 +29,4 @@ steps:
       runOptions: inline
 
       inline: |
-        kubectl set image deployment/azureplpelineweb-deployment azureplpelineweb=$(imageName) --record=true
+        kubectl set image deployment/azureplpelineweb azureplpelineweb=$(imageName) --record=true
