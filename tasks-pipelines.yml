@@ -1,6 +1,7 @@
 pool:
   name: Hosted Ubuntu 1604
 
+# 每两小时执行一次
 schedules:
   - cron: '0 */2 * * *'
     displayName: 'Run per two hours'
