@@ -3,7 +3,7 @@ pool:
 
 # 每两小时执行一次
 schedules:
-  - cron: '0 */2 * * *'
+  - cron: '1 */2 * * *'
     displayName: 'Run per two hours'
     branches:
       include:
