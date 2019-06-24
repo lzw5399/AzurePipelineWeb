@@ -15,6 +15,14 @@ schedules:
       - master
     always: true
 
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - README.md
+
 variables:
   tagName: '$(Build.BuildNumber)'
   imageName: '$(dockerid)/azureplpelineweb:$(tagName)'
