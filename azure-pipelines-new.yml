@@ -1,7 +1,4 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+# 新kubernetes部署流水线
 
 pool:
   vmImage: 'Ubuntu-16.04'
@@ -12,16 +9,16 @@ schedules:
     displayName: 'Run per two hours'
     branches:
       include:
-      - master
+        - master
     always: true
 
 trigger:
   branches:
     include:
-    - master
+      - master
   paths:
     exclude:
-    - README.md
+      - README.md
 
 variables:
   tagName: '$(Build.BuildNumber)'

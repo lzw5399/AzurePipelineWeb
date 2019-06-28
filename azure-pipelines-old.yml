@@ -1,0 +1,47 @@
+# 旧Docker部署流水线
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+# 每两小时执行一次
+schedules:
+  - cron: '0 */2 * * *'
+    displayName: 'Run per two hours'
+    branches:
+      include:
+        - master
+    always: true
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - README.md
+
+variables:
+  tagName: '$(Build.BuildNumber)'
+  imageName: '$(dockerid)/azureplpelineweb:$(tagName)'
+
+steps:
+  - script: dotnet build -c Release
+    displayName: 'Dotnet build'
+
+  - script: docker build -f AzurePipelineWeb/Dockerfile -t $(imageName) .
+    displayName: 'Docker build'
+
+  - script: |
+      docker login -u $(dockerid) -p $(password)
+      docker push $(imageName)
+    displayName: 'Push docker image'
+
+  - task: SSH@0
+    displayName: 'Run shell inline on remote machine'
+    inputs:
+      sshEndpoint: 'aliyun_centos'
+      runOptions: inline
+
+      inline: |
+        # update deployment image
+        kubectl set image deployment/azureplpelineweb azureplpelineweb=$(imageName) --record=true
