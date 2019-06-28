@@ -3,15 +3,6 @@
 pool:
   vmImage: 'Ubuntu-16.04'
 
-# 每两小时执行一次
-schedules:
-  - cron: '0 */2 * * *'
-    displayName: 'Run per two hours'
-    branches:
-      include:
-        - master
-    always: true
-
 trigger:
   branches:
     include:
