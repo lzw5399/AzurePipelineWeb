@@ -2,13 +2,13 @@ pool:
   name: Hosted Ubuntu 1604
 
 # 每两小时执行一次
-schedules:
-  - cron: '0 */2 * * *'
-    displayName: 'Run per two hours'
-    branches:
-      include:
-      - master
-    always: true
+# schedules:
+#   - cron: '0 */2 * * *'
+#     displayName: 'Run per two hours'
+#     branches:
+#       include:
+#       - master
+#     always: true
 
 steps:
   - task: DotNetCoreCLI@2
