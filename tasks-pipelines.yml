@@ -1,0 +1,62 @@
+pool:
+  name: Hosted Ubuntu 1604
+
+# 每两小时执行一次
+# schedules:
+#   - cron: '0 */2 * * *'
+#     displayName: 'Run per two hours'
+#     branches:
+#       include:
+#       - master
+#     always: true
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: '**/AzurePipeline.Test.csproj'
+      arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
+      publishTestResults: false
+
+  - script: |
+      dotnet tool install dotnet-sonarscanner --tool-path sonar
+
+      sonar/dotnet-sonarscanner begin /k:"AzurePipelineDemo" /o:"zhiwen-kooboo-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="3c6a54a327d7c294fc63ab47b85fe5feed42e94a" /d:sonar.cs.opencover.reportsPaths=$(System.DefaultWorkingDirectory)/AzurePipeline.Test/coverage.opencover.xml
+
+      dotnet build
+
+      sonar/dotnet-sonarscanner end /d:sonar.login="3c6a54a327d7c294fc63ab47b85fe5feed42e94a"
+
+    displayName: 'Run scanner'
+
+  # - task: SSH@0
+  #   displayName: 'Run shell on remote machine'
+  #   inputs:
+  #     sshEndpoint: 'aliyun_centos'
+  #     runOptions: inline
+
+  #     inline: |
+  #       # remove old tag images
+  #       containers1=$(docker images | grep azureplpelineweb | awk '{print $3}')
+  #       if test -n "$containers1"; 
+  #       then
+  #       docker rmi $(docker images | grep azureplpelineweb | awk '{print $3}') >> /dev/null 2>&1
+  #       rc=$?
+  #       if [[ $rc != 0 ]];
+  #       then
+  #         echo 'failed to remove image...'
+  #       fi
+  #       fi
+
+  #       # refresh pod
+  #       pods1=$(kubectl get pod | grep azureplpelineweb | awk '{print $1}')
+  #       if test -n "$pods1"; 
+  #       then
+  #       kubectl delete pod $(kubectl get pod | grep azureplpelineweb | awk '{print $1}') >> /dev/null 2>&1
+  #       rc=$?
+  #       if [[ $rc != 0 ]];
+  #       then
+  #         echo 'failed to refresh pod...'
+  #       fi
+  #       fi
