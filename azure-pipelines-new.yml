@@ -1,4 +1,4 @@
-# 新kubernetes部署流水线
+# 部署Kubernetes
 
 pool:
   vmImage: 'Ubuntu-16.04'
