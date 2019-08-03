@@ -1,4 +1,4 @@
-# 旧Docker单机部署流水线
+# 部署单机Docker
 
 pool:
   vmImage: 'Ubuntu-16.04'
