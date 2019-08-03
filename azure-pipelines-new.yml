@@ -1,4 +1,4 @@
-# 部署Kubernetes
+# 部署至Kubernetes
 
 pool:
   vmImage: 'Ubuntu-16.04'
